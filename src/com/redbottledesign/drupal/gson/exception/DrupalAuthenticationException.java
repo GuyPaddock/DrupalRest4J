@@ -11,4 +11,9 @@ extends DrupalHttpException
   {
     super(message, resourceUri, statusLine);
   }
+
+  public DrupalAuthenticationException(String message, URI resourceUri, StatusLine statusLine, Throwable cause)
+  {
+    super(message, resourceUri, statusLine, cause);
+  }
 }

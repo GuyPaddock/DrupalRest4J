@@ -9,6 +9,11 @@ extends DrupalAuthenticationException
 {
   public DrupalAuthenticationFailedException(URI resourceUri, StatusLine statusLine)
   {
+    this(resourceUri, statusLine, null);
+  }
+
+  public DrupalAuthenticationFailedException(URI resourceUri, StatusLine statusLine, Throwable cause)
+  {
     super(
       String.format(
         "Authentication with Drupal failed when acquiring token from endpoint '%s': %s",
@@ -21,5 +26,10 @@ extends DrupalAuthenticationException
   public DrupalAuthenticationFailedException(String message, URI resourceUri, StatusLine statusLine)
   {
     super(message, resourceUri, statusLine);
+  }
+
+  public DrupalAuthenticationFailedException(String message, URI resourceUri, StatusLine statusLine, Throwable cause)
+  {
+    super(message, resourceUri, statusLine, cause);
   }
 }

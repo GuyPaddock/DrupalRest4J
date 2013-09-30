@@ -6,13 +6,12 @@ import com.google.gson.annotations.SerializedName;
 public class Node
 extends Entity
 {
+  public static final String ENTITY_TYPE = "node";
   public static final String ID_FIELD_NAME = "nid";
   public static final String TYPE_FIELD_NAME = "type";
 
   @SerializedName("vid")
   private int revisionId;
-
-  private String type;
 
   private String title;
 
@@ -34,6 +33,11 @@ extends Entity
 
   private User author;
 
+  public Node()
+  {
+    super(ENTITY_TYPE);
+  }
+
   public int getRevisionId()
   {
     return this.revisionId;
@@ -42,16 +46,6 @@ extends Entity
   public void setRevisionId(int revisionId)
   {
     this.revisionId = revisionId;
-  }
-
-  public String getType()
-  {
-    return this.type;
-  }
-
-  public void setType(String type)
-  {
-    this.type = type;
   }
 
   public String getTitle()
@@ -141,7 +135,6 @@ extends Entity
            "id="          + this.getId()      + ", " +
            "url="         + this.getUrl()     + ", " +
            "revisionId="  + this.revisionId   + ", " +
-           "type="        + this.type         + ", " +
            "title="       + this.title        + ", " +
            "language="    + this.language     + ", " +
            "published="   + this.published    + ", " +

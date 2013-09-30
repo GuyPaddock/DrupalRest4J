@@ -14,6 +14,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
@@ -22,22 +23,15 @@ import com.redbottledesign.drupal.gson.exception.DrupalEndpointMissingException;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 
 public abstract class HttpRequestor
+extends DrupalConsumer
 {
-  private URI drupalSiteUri;
+  private static final String MIME_TYPE_JSON = "application/json";
+  private static final String HTTP_HEADER_ACCEPT = "Accept";
+  private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
 
   public HttpRequestor(URI drupalSiteUri)
   {
-    this.setDrupalSiteUri(drupalSiteUri);
-  }
-
-  public URI getDrupalSiteUri()
-  {
-    return this.drupalSiteUri;
-  }
-
-  protected void setDrupalSiteUri(URI drupalSiteUri)
-  {
-    this.drupalSiteUri = drupalSiteUri;
+    super(drupalSiteUri);
   }
 
   protected InputStream executeRequest(HttpUriRequest request)
@@ -47,66 +41,83 @@ public abstract class HttpRequestor
 
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build())
     {
-      StatusLine  statusLine;
-      int         statusCode;
-
-      this.preprocessRequest(request);
-
-      try (CloseableHttpResponse response = httpClient.execute(request))
+      try (CloseableHttpResponse response           = this.executeRequest(request, httpClient, null);
+           InputStream           responseStream     = response.getEntity().getContent();
+           ByteArrayOutputStream outputStream       = new ByteArrayOutputStream();
+           OutputStreamWriter    outputStreamWriter = new OutputStreamWriter(outputStream))
       {
-        statusLine  = response.getStatusLine();
-        statusCode  = statusLine.getStatusCode();
+        int readByte;
 
-        if (statusCode != 200)
+        // FIXME: This seems inefficient...
+        while ((readByte = responseStream.read()) != -1)
         {
-          switch (statusCode)
-          {
-            /* Success */
-            case 200:
-              break;
-
-            /* 403 Authorization Required */
-            case 403:
-              throw new DrupalAuthenticationRequiredException(request.getURI(), statusLine);
-
-            /* 404 File Not Found */
-            case 404:
-              throw new DrupalEndpointMissingException(request.getURI(), statusLine);
-
-            /* All other errors. */
-            default:
-              throw new DrupalHttpException(request.getURI(), statusLine);
-          }
+          outputStream.write(readByte);
         }
 
-        try (InputStream           responseStream     = response.getEntity().getContent();
-             ByteArrayOutputStream outputStream       = new ByteArrayOutputStream();
-             OutputStreamWriter    outputStreamWriter = new OutputStreamWriter(outputStream))
-        {
-          int readByte;
-
-          // FIXME: This seems inefficient...
-          while ((readByte = responseStream.read()) != -1)
-          {
-            outputStream.write(readByte);
-          }
-
-          fullResponseStream = new ByteArrayInputStream(outputStream.toByteArray());
-        }
+        fullResponseStream = new ByteArrayInputStream(outputStream.toByteArray());
       }
     }
 
     return fullResponseStream;
   }
 
+  protected CloseableHttpResponse executeRequest(HttpUriRequest request, CloseableHttpClient httpClient,
+                                                 HttpClientContext authContext)
+  throws IOException, DrupalHttpException
+  {
+    CloseableHttpResponse response;
+    StatusLine            statusLine;
+    int                   statusCode;
+    boolean               wasSuccessful = false;
+
+    this.preprocessRequest(request);
+
+    /* NOTE: Not try-with-resources because the caller needs it open, except if
+     * an exception is thrown.
+     */
+    response = httpClient.execute(request, authContext);
+
+    try
+    {
+      statusLine  = response.getStatusLine();
+      statusCode  = statusLine.getStatusCode();
+
+      // 2XX is success
+      if (!String.valueOf(statusCode).matches("2[0-9]{2}"))
+      {
+        switch (statusCode)
+        {
+          /* 403 Authorization Required */
+          case 403:
+            throw new DrupalAuthenticationRequiredException(request.getURI(), statusLine);
+
+          /* 404 File Not Found */
+          case 404:
+            throw new DrupalEndpointMissingException(request.getURI(), statusLine);
+
+          /* All other errors. */
+          default:
+            throw new DrupalHttpException(request.getURI(), statusLine, response);
+        }
+      }
+
+      wasSuccessful = true;
+    }
+
+    finally
+    {
+      if (!wasSuccessful)
+        response.close();
+    }
+
+    return response;
+  }
+
   protected void preprocessRequest(HttpRequest request)
   throws DrupalHttpException, IOException
   {
-  }
-
-  protected URI createUriForEntityId(String entityType, int entityId)
-  {
-    return this.createEndpointUri(String.format("/%s/%d.json", entityType.toLowerCase(), entityId));
+    request.addHeader(HTTP_HEADER_CONTENT_TYPE, MIME_TYPE_JSON);
+    request.addHeader(HTTP_HEADER_ACCEPT, MIME_TYPE_JSON);
   }
 
   protected URI createUriForCriterion(String endpoint, String criterion, Object value)

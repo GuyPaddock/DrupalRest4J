@@ -34,9 +34,12 @@ extends CustomizingTypeAdapterFactory<E>
     {
       JsonObject targetJsonObj = targetElement.getAsJsonObject();
 
-      // Swap "id" to be the appropriate field name for the type of entity (nid, uid, etc).
-      targetJsonObj.remove(Entity.ID_FIELD_NAME);
-      targetJsonObj.addProperty(this.idFieldName, sourceElement.getId());
+      if (targetJsonObj.has(Entity.JAVA_ID_FIELD_NAME))
+      {
+        // Swap "id" to be the appropriate field name for the type of entity (nid, uid, etc).
+        targetJsonObj.remove(Entity.JAVA_ID_FIELD_NAME);
+        targetJsonObj.addProperty(this.idFieldName, sourceElement.getId());
+      }
     }
 
     return targetElement;
@@ -51,7 +54,7 @@ extends CustomizingTypeAdapterFactory<E>
     if (parsedId != null)
     {
       // Swap the type-specific field name (nid, uid, etc) to being just "id" in Java.
-      parsedJsonObj.add(Entity.ID_FIELD_NAME, parsedId);
+      parsedJsonObj.add(Entity.JAVA_ID_FIELD_NAME, parsedId);
       parsedJsonObj.remove(this.idFieldName);
     }
 

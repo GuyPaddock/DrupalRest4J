@@ -1,11 +1,8 @@
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
 
 import com.redbottledesign.drupal.Node;
-import com.redbottledesign.drupal.gson.DrupalGsonFactory;
 import com.redbottledesign.drupal.gson.NodeRequestor;
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
@@ -38,14 +35,14 @@ public class GetWorkers
     System.out.println(drupalSessionManager.getSessionToken());
 
     NodeRequestor requestor = new NodeRequestor(drupalSessionManager);
-    Node          node      = requestor.requestNodeByNid(11);
+    Node          node      = requestor.requestNodeByNid(12);
 
     System.out.println(node);
-    System.out.println(DrupalGsonFactory.getInstance().createGson().toJson(node, Node.class));
-
-    List<Node> nodes = requestor.requestNodesByType("faq");
-
-    System.out.println(Arrays.toString(nodes.toArray()));
+//    System.out.println(DrupalGsonFactory.getInstance().createGson().toJson(node, Node.class));
+//
+//    List<Node> nodes = requestor.requestNodesByType("faq");
+//
+//    System.out.println(Arrays.toString(nodes.toArray()));
 
     node.setTitle(node.getTitle() + " CHANGED");
 

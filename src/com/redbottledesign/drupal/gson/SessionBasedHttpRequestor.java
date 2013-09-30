@@ -32,6 +32,8 @@ extends HttpRequestor
   protected void preprocessRequest(HttpRequest request)
   throws DrupalHttpException, IOException
   {
+    super.preprocessRequest(request);
+
     // Add the session token to the request before it is sent.
     this.sessionManager.addSessionToRequest(request);
   }

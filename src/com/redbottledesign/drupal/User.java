@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class User
 extends Entity
 {
+  public static final String ENTITY_TYPE = "user";
   public static final String ID_FIELD_NAME = "uid";
 
   private String name;
@@ -22,6 +23,11 @@ extends Entity
 
   @SerializedName("status")
   private boolean isActive;
+
+  public User()
+  {
+    super(ENTITY_TYPE);
+  }
 
   public String getName()
   {

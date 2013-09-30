@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-public class BooleanAdapterFactory
+public class BooleanTypeAdapterFactory
 implements TypeAdapterFactory
 {
   @Override
