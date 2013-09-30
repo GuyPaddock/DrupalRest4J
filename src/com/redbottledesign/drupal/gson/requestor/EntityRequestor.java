@@ -1,6 +1,5 @@
 package com.redbottledesign.drupal.gson.requestor;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -103,21 +102,9 @@ extends SessionBasedHttpRequestor
 
     entityJson  = this.computeDifferenceOnlyJson(entity);
 
-    System.out.println(entityJson);
-
     request.setEntity(new StringEntity(entityJson));
 
-    try (InputStream    responseStream = this.executeRequest(request);
-         Reader         responseReader = new InputStreamReader(responseStream);
-         BufferedReader bufferedReader = new BufferedReader(responseReader))
-    {
-      String line;
-
-      while ((line = bufferedReader.readLine()) != null)
-      {
-        System.out.println(" >> " + line);
-      }
-    }
+    this.executeRequest(request).close();
   }
 
   protected URI createUriForEntityCriterion(String entityType, String criterion, Object value)
