@@ -1,4 +1,4 @@
-package com.redbottledesign.drupal.gson.type;
+package com.redbottledesign.drupal.gson.typeadapter;
 
 import java.io.IOException;
 

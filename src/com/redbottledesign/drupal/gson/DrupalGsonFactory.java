@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.redbottledesign.drupal.Node;
 import com.redbottledesign.drupal.User;
-import com.redbottledesign.drupal.gson.type.BooleanAdapterFactory;
-import com.redbottledesign.drupal.gson.type.EntityTypeAdapterFactory;
+import com.redbottledesign.drupal.gson.typeadapter.BooleanAdapterFactory;
+import com.redbottledesign.drupal.gson.typeadapter.EntityTypeAdapterFactory;
 import com.redbottledesign.util.gson.UnixDateAdapterFactory;
 
 public class DrupalGsonFactory
