@@ -3,9 +3,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.redbottledesign.drupal.Node;
-import com.redbottledesign.drupal.gson.NodeRequestor;
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
+import com.redbottledesign.drupal.gson.requestor.NodeRequestor;
 
 public class GetWorkers
 {

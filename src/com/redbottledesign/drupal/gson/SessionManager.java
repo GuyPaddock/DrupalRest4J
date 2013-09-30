@@ -6,6 +6,7 @@ import java.net.URI;
 import org.apache.http.HttpRequest;
 
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
+import com.redbottledesign.drupal.gson.requestor.SessionRequestor;
 
 public class SessionManager
 extends DrupalConsumer

@@ -1,4 +1,4 @@
-package com.redbottledesign.drupal.gson;
+package com.redbottledesign.gson.strategy;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -9,7 +9,7 @@ import java.util.Set;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 
-class BeforeAndAfterExclusionStrategy
+public class BeforeAndAfterExclusionStrategy
 implements ExclusionStrategy
 {
   private final Object originalObject;

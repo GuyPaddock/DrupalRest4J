@@ -1,4 +1,4 @@
-package com.redbottledesign.drupal.gson;
+package com.redbottledesign.drupal.gson.requestor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +13,9 @@ import org.apache.http.client.methods.HttpGet;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.redbottledesign.drupal.Node;
+import com.redbottledesign.drupal.gson.DrupalGsonFactory;
+import com.redbottledesign.drupal.gson.JsonEntityResultList;
+import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 
 public class NodeRequestor

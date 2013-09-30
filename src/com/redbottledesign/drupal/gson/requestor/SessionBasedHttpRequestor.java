@@ -1,9 +1,10 @@
-package com.redbottledesign.drupal.gson;
+package com.redbottledesign.drupal.gson.requestor;
 
 import java.io.IOException;
 
 import org.apache.http.HttpRequest;
 
+import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 
 public abstract class SessionBasedHttpRequestor

@@ -1,4 +1,4 @@
-package com.redbottledesign.drupal.gson;
+package com.redbottledesign.drupal.gson.requestor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
+import com.redbottledesign.drupal.gson.SessionToken;
 import com.redbottledesign.drupal.gson.exception.DrupalAuthenticationFailedException;
 import com.redbottledesign.drupal.gson.exception.DrupalAuthenticationRequiredException;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;

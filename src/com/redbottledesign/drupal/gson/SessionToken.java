@@ -1,7 +1,6 @@
 package com.redbottledesign.drupal.gson;
 
-
-class SessionToken
+public class SessionToken
 {
   private String sessionCookie;
   private String csrfToken;

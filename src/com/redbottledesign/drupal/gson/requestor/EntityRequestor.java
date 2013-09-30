@@ -1,4 +1,4 @@
-package com.redbottledesign.drupal.gson;
+package com.redbottledesign.drupal.gson.requestor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +16,10 @@ import org.apache.http.entity.StringEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.redbottledesign.drupal.Entity;
+import com.redbottledesign.drupal.gson.DrupalGsonFactory;
+import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
+import com.redbottledesign.gson.strategy.BeforeAndAfterExclusionStrategy;
 
 public class EntityRequestor
 extends SessionBasedHttpRequestor
