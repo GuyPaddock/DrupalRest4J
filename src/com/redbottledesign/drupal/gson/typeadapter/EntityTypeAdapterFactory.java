@@ -3,7 +3,7 @@ package com.redbottledesign.drupal.gson.typeadapter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.redbottledesign.drupal.Entity;
-import com.redbottledesign.util.gson.CustomizingTypeAdapterFactory;
+import com.redbottledesign.gson.typeadapter.CustomizingTypeAdapterFactory;
 
 public class EntityTypeAdapterFactory<E extends Entity>
 extends CustomizingTypeAdapterFactory<E>

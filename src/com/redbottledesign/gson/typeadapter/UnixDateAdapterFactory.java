@@ -1,4 +1,4 @@
-package com.redbottledesign.util.gson;
+package com.redbottledesign.gson.typeadapter;
 
 import java.io.IOException;
 import java.util.Date;

@@ -6,7 +6,7 @@ import com.redbottledesign.drupal.Node;
 import com.redbottledesign.drupal.User;
 import com.redbottledesign.drupal.gson.typeadapter.BooleanTypeAdapterFactory;
 import com.redbottledesign.drupal.gson.typeadapter.EntityTypeAdapterFactory;
-import com.redbottledesign.util.gson.UnixDateAdapterFactory;
+import com.redbottledesign.gson.typeadapter.UnixDateAdapterFactory;
 
 public class DrupalGsonFactory
 {
