@@ -80,9 +80,9 @@ extends Entity<User>
   }
 
   @Override
-  public UserReference asReference()
+  public User.Reference asReference()
   {
-    return new UserReference(this.getId());
+    return new User.Reference(this.getId());
   }
 
   @Override
@@ -97,5 +97,19 @@ extends Entity<User>
            "dateLastLogin=" + dateLastLogin + ", " +
            "isActive="      + isActive      +
            "]";
+  }
+
+  public static class Reference
+  extends Entity.Reference<User>
+  {
+    public Reference()
+    {
+      this(null);
+    }
+
+    public Reference(Integer id)
+    {
+      super(User.ENTITY_TYPE, id);
+    }
   }
 }

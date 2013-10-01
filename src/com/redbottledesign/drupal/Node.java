@@ -50,7 +50,7 @@ extends Entity<Node>
   @SerializedName(DRUPAL_DATE_CHANGED_FIELD_NAME)
   private Date dateChanged;
 
-  private UserReference author;
+  private User.Reference author;
 
   public Node(String bundleType)
   {
@@ -140,20 +140,20 @@ extends Entity<Node>
     this.dateChanged = dateChanged;
   }
 
-  public UserReference getAuthor()
+  public User.Reference getAuthor()
   {
     return this.author;
   }
 
-  public void setAuthor(UserReference author)
+  public void setAuthor(User.Reference author)
   {
     this.author = author;
   }
 
   @Override
-  public NodeReference asReference()
+  public Node.Reference asReference()
   {
-    return new NodeReference(this.getId());
+    return new Node.Reference(this.getId());
   }
 
   @Override
@@ -172,5 +172,19 @@ extends Entity<Node>
            "dateChanged=" + this.dateChanged  + ", " +
            "author="      + this.author       +
            "]";
+  }
+
+  public static class Reference
+  extends Entity.Reference<Node>
+  {
+    public Reference()
+    {
+      this(null);
+    }
+
+    public Reference(Integer id)
+    {
+      super(Node.ENTITY_TYPE, id);
+    }
   }
 }
