@@ -4,7 +4,7 @@ import java.net.URI;
 
 import com.google.gson.annotations.SerializedName;
 
-public abstract class EntityReference<T extends Entity>
+public abstract class EntityReference<T extends Entity<T>>
 {
   public static final String DRUPAL_ENTITY_TYPE_FIELD = "resource";
   public static final String JAVA_ENTITY_TYPE_FIELD = "entityType";

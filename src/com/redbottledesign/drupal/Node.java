@@ -4,7 +4,7 @@ import java.util.Date;
 import com.google.gson.annotations.SerializedName;
 
 public class Node
-extends Entity
+extends Entity<Node>
 {
   public static final String ENTITY_TYPE = "node";
 
@@ -148,6 +148,12 @@ extends Entity
   public void setAuthor(UserReference author)
   {
     this.author = author;
+  }
+
+  @Override
+  public NodeReference asReference()
+  {
+    return new NodeReference(this.getId());
   }
 
   @Override

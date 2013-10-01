@@ -3,7 +3,7 @@ import java.net.URI;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Entity
+public abstract class Entity<T extends Entity<T>>
 {
   public static final String JAVA_BUNDLE_TYPE_FIELD_NAME = "bundleType";
   public static final String DRUPAL_BUNDLE_TYPE_FIELD_NAME = "type";
@@ -63,6 +63,8 @@ public class Entity
   {
     this.bundleType = bundleType;
   }
+
+  public abstract EntityReference<T> asReference();
 
   @Override
   public String toString()
