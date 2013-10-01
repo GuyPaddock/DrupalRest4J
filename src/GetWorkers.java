@@ -1,13 +1,16 @@
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Date;
 
-import com.redbottledesign.bitcoin.pool.drupal.Round;
-import com.redbottledesign.bitcoin.pool.drupal.gson.requestor.RoundRequestor;
+import com.redbottledesign.bitcoin.pool.drupal.SolvedBlock;
+import com.redbottledesign.bitcoin.pool.drupal.gson.requestor.SolvedBlockRequestor;
+import com.redbottledesign.drupal.User;
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
+import com.redbottledesign.drupal.gson.requestor.UserRequestor;
 
 public class GetWorkers
 {
@@ -52,8 +55,8 @@ public class GetWorkers
 
 //    WittyRemark remark = new WittyRemark();
 //
-//    UserRequestor userRequestor       = new UserRequestor(drupalSessionManager);
-//    User          poolManagementUser  = userRequestor.requestUserByUid(14);
+    UserRequestor userRequestor       = new UserRequestor(drupalSessionManager);
+    User          poolManagementUser  = userRequestor.requestUserByUid(14);
 //
 //    System.out.println(poolManagementUser);
 //
@@ -65,14 +68,27 @@ public class GetWorkers
 //
 //    System.out.println(remark);
 
-    RoundRequestor  roundRequestor = new RoundRequestor(drupalSessionManager);
-    Round           round          = roundRequestor.requestNodeByNid(26);
+//    RoundRequestor  roundRequestor = new RoundRequestor(drupalSessionManager);
+//    Round           round          = roundRequestor.requestNodeByNid(26);
+//
+//    System.out.println(round);
+//
+//    round.setRoundStatus(Round.Status.OPEN);
+//    round.getRoundDuration().setEndDate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse("10/5/2013 6:35 AM"));
+//
+//    roundRequestor.updateNode(round);
 
-    System.out.println(round);
+    SolvedBlockRequestor requestor = new SolvedBlockRequestor(drupalSessionManager);
+    SolvedBlock          block     = requestor.requestNodeByNid(27);
 
-    round.setRoundStatus(Round.Status.OPEN);
-    round.getRoundDuration().setEndDate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse("10/5/2013 6:35 AM"));
+    System.out.println(block);
 
-    roundRequestor.updateNode(round);
+    block.setCreationTime(new Date());
+    block.setBlockReward(BigDecimal.valueOf(25));
+    block.setSolvingMember(new User.Reference(1));
+
+    requestor.updateNode(block);
+
+    System.out.println(block);
   }
 }
