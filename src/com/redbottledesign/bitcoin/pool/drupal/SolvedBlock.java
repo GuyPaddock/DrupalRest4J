@@ -10,27 +10,48 @@ import com.redbottledesign.drupal.User;
 public class SolvedBlock
 extends Node
 {
-  private static final String CONTENT_TYPE = "block";
+  public static final String CONTENT_TYPE = "block";
 
-  @SerializedName("field_block_height")
+  public static final String DRUPAL_FIELD_HEIGHT = "field_block_height";
+  public static final String JAVA_FIELD_HEIGHT = "height";
+
+  public static final String DRUPAL_FIELD_STATUS = "field_block_status";
+  public static final String JAVA_FIELD_STATUS = "status";
+
+  public static final String DRUPAL_FIELD_CREATION_TIME = "field_block_creation_time";
+  public static final String JAVA_FIELD_CREATION_TIME = "creationTime";
+
+  public static final String DRUPAL_FIELD_BLOCK_DIFFICULTY = "field_block_difficulty";
+  public static final String JAVA_FIELD_BLOCK_DIFFICULTY = "difficulty";
+
+  public static final String DRUPAL_FIELD_BLOCK_REWARD = "field_block_reward";
+  public static final String JAVA_FIELD_BLOCK_REWARD = "blockReward";
+
+  public static final String DRUPAL_FIELD_ROUND = "field_block_round";
+  public static final String JAVA_FIELD_ROUND = "round";
+
+  public static final String DRUPAL_FIELD_SOLVING_MEMBER = "field_block_solver";
+  public static final String JAVA_FIELD_SOLVING_MEMBER = "solvingMember";
+
+  @SerializedName(DRUPAL_FIELD_HEIGHT)
   private long height;
 
-  @SerializedName("field_block_status")
+  @SerializedName(DRUPAL_FIELD_STATUS)
   private SolvedBlock.Status status;
 
-  @SerializedName("field_block_creation_time")
+  @SerializedName(DRUPAL_FIELD_CREATION_TIME)
   private Date creationTime;
 
-  @SerializedName("field_block_difficulty")
+  @SerializedName(DRUPAL_FIELD_BLOCK_DIFFICULTY)
   private long difficulty;
 
-  @SerializedName("field_block_reward")
+  @SerializedName(DRUPAL_FIELD_BLOCK_REWARD)
   private BigDecimal blockReward;
 
-  @SerializedName("field_block_round")
+  @SerializedName(DRUPAL_FIELD_ROUND)
   private Node.Reference round;
 
-  @SerializedName("field_block_solver")
+  @SerializedName(DRUPAL_FIELD_SOLVING_MEMBER)
   private User.Reference solvingMember;
 
   public SolvedBlock()

@@ -9,10 +9,16 @@ extends Node
 {
   private static final String CONTENT_TYPE = "round";
 
-  @SerializedName("field_round_status")
+  public static final String DRUPAL_FIELD_ROUND_STATUS = "field_round_status";
+  public static final String JAVA_FIELD_ROUND_STATUS = "roundStatus";
+
+  public static final String DRUPAL_FIELD_ROUND_DURATION = "field_round_start_end";
+  public static final String JAVA_FIELD_ROUND_DURATION = "roundDuration";
+
+  @SerializedName(DRUPAL_FIELD_ROUND_STATUS)
   private Round.Status roundStatus;
 
-  @SerializedName("field_round_start_end")
+  @SerializedName(DRUPAL_FIELD_ROUND_DURATION)
   private DateRange roundDuration;
 
   public Round()
