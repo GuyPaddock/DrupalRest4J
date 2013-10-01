@@ -3,7 +3,7 @@ import java.net.URI;
 
 import com.google.gson.annotations.SerializedName;
 
-public abstract class Entity<T extends Entity<T>>
+public abstract class Entity
 {
   public static final String JAVA_BUNDLE_TYPE_FIELD_NAME = "bundleType";
   public static final String DRUPAL_BUNDLE_TYPE_FIELD_NAME = "type";
@@ -64,7 +64,7 @@ public abstract class Entity<T extends Entity<T>>
     this.bundleType = bundleType;
   }
 
-  public abstract Entity.Reference<T> asReference();
+  public abstract Entity.Reference<? extends Entity> asReference();
 
   @Override
   public String toString()
@@ -77,7 +77,7 @@ public abstract class Entity<T extends Entity<T>>
   		   	 "]";
   }
 
-  public static abstract class Reference<T extends Entity<T>>
+  public static abstract class Reference<T extends Entity>
   {
     public static final String DRUPAL_ENTITY_TYPE_FIELD = "resource";
     public static final String JAVA_ENTITY_TYPE_FIELD = "entityType";
