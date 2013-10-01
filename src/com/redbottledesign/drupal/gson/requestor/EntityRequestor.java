@@ -32,7 +32,7 @@ extends SessionBasedHttpRequestor
     super(sessionManager);
   }
 
-  protected <T extends Entity> T requestEntityById(int entityId, String entityType, Class<T> entityClass)
+  protected <T extends Entity<?>> T requestEntityById(int entityId, String entityType, Class<T> entityClass)
   throws IOException, DrupalHttpException
   {
     T     result      = null;
@@ -49,11 +49,11 @@ extends SessionBasedHttpRequestor
     return result;
   }
 
-  protected String computeDifferenceOnlyJson(final Entity updatedEntity)
+  protected String computeDifferenceOnlyJson(final Entity<?> updatedEntity)
   {
-    GsonBuilder   drupalGsonBuilder;
-    Gson          drupalGson;
-    final Entity  existingEntity;
+    GsonBuilder     drupalGsonBuilder;
+    Gson            drupalGson;
+    final Entity<?> existingEntity;
 
     try
     {
@@ -86,7 +86,7 @@ extends SessionBasedHttpRequestor
     return drupalGson.toJson(updatedEntity);
   }
 
-  protected void updateEntity(Entity entity)
+  protected void updateEntity(Entity<?> entity)
   throws IOException, DrupalHttpException
   {
     URI     requestUri;
@@ -115,7 +115,7 @@ extends SessionBasedHttpRequestor
     this.executeRequest(request).close();
   }
 
-  protected void createEntity(Entity entity, ExclusionStrategy... exclusionStrategies)
+  protected void createEntity(Entity<?> entity, ExclusionStrategy... exclusionStrategies)
   throws IOException, DrupalHttpException
   {
     URI         requestUri;
@@ -145,7 +145,7 @@ extends SessionBasedHttpRequestor
     try (InputStream  responseStream        = this.executeRequest(request);
          Reader       responseStreamReader  = new InputStreamReader(responseStream))
     {
-      Entity updatedEntity = drupalGson.fromJson(responseStreamReader, entity.getClass());
+      Entity<?> updatedEntity = drupalGson.fromJson(responseStreamReader, entity.getClass());
 
       entity.setId(updatedEntity.getId());
     }

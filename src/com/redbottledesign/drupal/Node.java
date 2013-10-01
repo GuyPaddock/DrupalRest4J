@@ -4,7 +4,7 @@ import java.util.Date;
 import com.google.gson.annotations.SerializedName;
 
 public class Node
-extends Entity
+extends Entity<Node>
 {
   public static final String ENTITY_TYPE = "node";
 

@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 import com.redbottledesign.drupal.Entity;
 
-public class JsonEntityResultList<T extends Entity>
+public class JsonEntityResultList<T extends Entity<?>>
 {
   @SerializedName("self")
   private URL jsonUrl;

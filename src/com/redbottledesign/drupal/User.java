@@ -5,7 +5,7 @@ import java.util.Date;
 import com.google.gson.annotations.SerializedName;
 
 public class User
-extends Entity
+extends Entity<User>
 {
   public static final String ENTITY_TYPE = "user";
   public static final String DRUPAL_ID_FIELD_NAME = "uid";
