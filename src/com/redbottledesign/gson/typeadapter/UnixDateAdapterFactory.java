@@ -2,6 +2,7 @@ package com.redbottledesign.gson.typeadapter;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -33,8 +34,6 @@ implements TypeAdapterFactory
   protected static class UnixDateAdapter
   extends TypeAdapter<Date>
   {
-    private static final int MILLISECONDS_PER_SECOND = 1000;
-
     TypeAdapter<JsonElement>  elementAdapter;
 
     public UnixDateAdapter(TypeAdapter<JsonElement> elementAdapter)
@@ -51,7 +50,7 @@ implements TypeAdapterFactory
 
       if (value != null)
       {
-        JsonElement jsonValue = new JsonPrimitive(value.getTime() / MILLISECONDS_PER_SECOND);
+        JsonElement jsonValue = new JsonPrimitive(TimeUnit.SECONDS.convert(value.getTime(), TimeUnit.MILLISECONDS));
 
         this.elementAdapter.write(out, jsonValue);
       }
@@ -75,7 +74,7 @@ implements TypeAdapterFactory
 
       readTime = this.elementAdapter.read(in);
       unixTime = readTime.getAsJsonPrimitive().getAsLong();
-      dateTime = new Date(unixTime * MILLISECONDS_PER_SECOND);
+      dateTime = new Date(TimeUnit.MILLISECONDS.convert(unixTime, TimeUnit.SECONDS));
 
       return dateTime;
     }
