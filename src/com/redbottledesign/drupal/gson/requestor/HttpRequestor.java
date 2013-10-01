@@ -1,9 +1,11 @@
 package com.redbottledesign.drupal.gson.requestor;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.util.Collections;
@@ -86,6 +88,16 @@ extends DrupalConsumer
       // 2XX is success
       if (!String.valueOf(statusCode).matches("2[0-9]{2}"))
       {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent())))
+        {
+          String line;
+
+          while ((line = reader.readLine()) != null)
+          {
+            System.out.println(" >> " + line);
+          }
+        }
+
         switch (statusCode)
         {
           /* 403 Authorization Required */

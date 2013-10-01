@@ -8,7 +8,7 @@ public class User
 extends Entity
 {
   public static final String ENTITY_TYPE = "user";
-  public static final String ID_FIELD_NAME = "uid";
+  public static final String DRUPAL_ID_FIELD_NAME = "uid";
 
   private String name;
 
@@ -79,11 +79,16 @@ extends Entity
     this.isActive = isActive;
   }
 
+  public UserReference asReference()
+  {
+    return new UserReference(this.getId());
+  }
+
   @Override
   public String toString()
   {
-    return "User ["         +
-    		   "id="            + getId()       + ", " +
+    return this.getClass().getSimpleName()  + " [" +
+           "id="            + getId()       + ", " +
   		   	 "url="           + getUrl()      + ", " +
            "name="          + name          + ", " +
            "emailAddress="  + emailAddress  + ", " +
@@ -92,6 +97,4 @@ extends Entity
            "isActive="      + isActive      +
            "]";
   }
-
-
 }

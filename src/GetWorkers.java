@@ -2,10 +2,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.redbottledesign.bitcoin.pool.drupal.WittyRemark;
 import com.redbottledesign.drupal.Node;
+import com.redbottledesign.drupal.User;
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 import com.redbottledesign.drupal.gson.requestor.NodeRequestor;
+import com.redbottledesign.drupal.gson.requestor.UserRequestor;
 
 public class GetWorkers
 {
@@ -30,12 +33,12 @@ public class GetWorkers
 //
 //    System.out.println(gson.toJson(nodes));
     SessionManager drupalSessionManager =
-        new SessionManager(new URI("http://www.theredpool.com"), DRUPAL_USER_NAME, DRUPAL_PASSWORD);
+      new SessionManager(new URI("http://www.theredpool.com"), DRUPAL_USER_NAME, DRUPAL_PASSWORD);
 
-    System.out.println(drupalSessionManager.getSessionToken());
-
+//    System.out.println(drupalSessionManager.getSessionToken());
+//
     NodeRequestor requestor = new NodeRequestor(drupalSessionManager);
-    Node          node      = requestor.requestNodeByNid(12);
+    Node          node      = requestor.requestNodeByNid(11);
 
     System.out.println(node);
 //    System.out.println(DrupalGsonFactory.getInstance().createGson().toJson(node, Node.class));
@@ -44,8 +47,23 @@ public class GetWorkers
 //
 //    System.out.println(Arrays.toString(nodes.toArray()));
 
-    node.setTitle(node.getTitle() + " CHANGED");
+//    node.setTitle(node.getTitle() + " CHANGED");
+//
+//    requestor.updateNode(node);
 
-    requestor.updateNode(node);
+    WittyRemark remark = new WittyRemark();
+
+    UserRequestor userRequestor       = new UserRequestor(drupalSessionManager);
+    User          poolManagementUser  = userRequestor.requestUserByUid(14);
+
+    System.out.println(poolManagementUser);
+
+    remark.setTitle("This is a fake remark.");
+    remark.setPublished(true);
+    remark.setAuthor(poolManagementUser.asReference());
+
+    requestor.createNode(remark);
+
+    System.out.println(remark);
   }
 }

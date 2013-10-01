@@ -9,9 +9,11 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 
+import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.redbottledesign.drupal.Entity;
@@ -20,7 +22,7 @@ import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 import com.redbottledesign.gson.strategy.BeforeAndAfterExclusionStrategy;
 
-public class EntityRequestor
+public abstract class EntityRequestor
 extends SessionBasedHttpRequestor
 {
   private static final String JSON_URI_SUFFIX = ".json";
@@ -90,14 +92,20 @@ extends SessionBasedHttpRequestor
     URI     requestUri;
     String  entityJson;
     HttpPut request;
+    Integer entityId;
 
     if (entity == null)
       throw new IllegalArgumentException("entity cannot be null.");
 
-    if (entity.getId() == 0)
-      throw new IllegalArgumentException("entity must have an id in order to be updated.");
+    entityId = entity.getId();
 
-    requestUri  = this.createUriForEntityId(entity.getEntityType(), entity.getId(), true);
+    if (entity.isNew())
+      throw new IllegalArgumentException("entity cannot be new.");
+
+    if (entityId == 0)
+      throw new IllegalArgumentException("entity must have a non-zero id in order to be updated.");
+
+    requestUri  = this.createUriForEntityId(entity.getEntityType(), entityId, true);
     request     = new HttpPut(requestUri);
 
     entityJson  = this.computeDifferenceOnlyJson(entity);
@@ -105,6 +113,42 @@ extends SessionBasedHttpRequestor
     request.setEntity(new StringEntity(entityJson));
 
     this.executeRequest(request).close();
+  }
+
+  protected void createEntity(Entity entity, ExclusionStrategy... exclusionStrategies)
+  throws IOException, DrupalHttpException
+  {
+    URI         requestUri;
+    GsonBuilder drupalGsonBuilder = DrupalGsonFactory.getInstance().createGsonBuilder();
+    Gson        drupalGson;
+    String      entityJson;
+    HttpPost    request;
+
+    if (entity == null)
+      throw new IllegalArgumentException("entity cannot be null.");
+
+    if (!entity.isNew())
+      throw new IllegalArgumentException("entity must be new.");
+
+    requestUri  = this.createUriForEntity(entity.getEntityType(), true);
+    request     = new HttpPost(requestUri);
+
+    drupalGsonBuilder.setExclusionStrategies(exclusionStrategies);
+
+    drupalGson  = drupalGsonBuilder.create();
+    entityJson  = drupalGson.toJson(entity);
+
+    System.out.println(entityJson);
+
+    request.setEntity(new StringEntity(entityJson));
+
+    try (InputStream  responseStream        = this.executeRequest(request);
+         Reader       responseStreamReader  = new InputStreamReader(responseStream))
+    {
+      Entity updatedEntity = drupalGson.fromJson(responseStreamReader, entity.getClass());
+
+      entity.setId(updatedEntity.getId());
+    }
   }
 
   protected URI createUriForEntityCriterion(String entityType, String criterion, Object value)
@@ -127,6 +171,11 @@ extends SessionBasedHttpRequestor
     return this.createUriForCriteria(
       this.getRelativeEndpointUriFragment(entityType, entityId, false),
       criteria);
+  }
+
+  protected URI createUriForEntity(String entityType, boolean forSave)
+  {
+    return this.createUriForEntityId(entityType, null, forSave);
   }
 
   protected URI createUriForEntityId(String entityType, Integer entityId, boolean forSave)

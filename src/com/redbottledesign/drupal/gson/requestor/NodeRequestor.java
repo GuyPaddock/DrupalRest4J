@@ -12,11 +12,13 @@ import org.apache.http.client.methods.HttpGet;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.redbottledesign.drupal.Entity;
 import com.redbottledesign.drupal.Node;
 import com.redbottledesign.drupal.gson.DrupalGsonFactory;
 import com.redbottledesign.drupal.gson.JsonEntityResultList;
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
+import com.redbottledesign.drupal.gson.strategy.NewNodeExclusionStrategy;
 
 public class NodeRequestor
 extends EntityRequestor
@@ -36,7 +38,7 @@ extends EntityRequestor
   throws IOException, DrupalHttpException
   {
     List<Node>  results     = null;
-    URI         requestUri  = this.createUriForEntityCriterion(Node.ENTITY_TYPE, Node.TYPE_FIELD_NAME, nodeType);
+    URI         requestUri  = this.createUriForEntityCriterion(Node.ENTITY_TYPE, Entity.DRUPAL_BUNDLE_TYPE_FIELD_NAME, nodeType);
 
     try (InputStream  responseStream = this.executeRequest(new HttpGet(requestUri));
          Reader       responseReader = new InputStreamReader(responseStream))
@@ -56,6 +58,12 @@ extends EntityRequestor
   throws IOException, DrupalHttpException
   {
     this.updateEntity(node);
+  }
+
+  public void createNode(Node node)
+  throws IOException, DrupalHttpException
+  {
+    this.createEntity(node, new NewNodeExclusionStrategy());
   }
 
   protected Type getListResultType()

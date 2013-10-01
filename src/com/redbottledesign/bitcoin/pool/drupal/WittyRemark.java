@@ -5,9 +5,10 @@ import com.redbottledesign.drupal.Node;
 public class WittyRemark
 extends Node
 {
-  @Override
-  public String toString()
+  private static final String CONTENT_TYPE = "witty_remark";
+
+  public WittyRemark()
   {
-    return super.toString().replace("Node [", "WittyRemark [");
+    super(CONTENT_TYPE);
   }
 }

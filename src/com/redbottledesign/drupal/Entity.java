@@ -1,5 +1,5 @@
 package com.redbottledesign.drupal;
-import java.net.URL;
+import java.net.URI;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,16 +12,26 @@ public class Entity
 
   private transient final String entityType;
 
+  private Integer id;
+
   @SerializedName(DRUPAL_BUNDLE_TYPE_FIELD_NAME)
   private String bundleType;
 
-  private int id;
-
-  private URL url;
+  private URI uri;
 
   public Entity(String entityType)
   {
     this.entityType = entityType;
+  }
+
+  public Integer getId()
+  {
+    return this.id;
+  }
+
+  public void setId(Integer id)
+  {
+    this.id = id;
   }
 
   public String getEntityType()
@@ -34,24 +44,19 @@ public class Entity
     return this.bundleType;
   }
 
-  public int getId()
+  public URI getUrl()
   {
-    return this.id;
+    return this.uri;
   }
 
-  public void setId(int id)
+  public void setUrl(URI url)
   {
-    this.id = id;
+    this.uri = url;
   }
 
-  public URL getUrl()
+  public boolean isNew()
   {
-    return this.url;
-  }
-
-  public void setUrl(URL url)
-  {
-    this.url = url;
+    return (this.id == null);
   }
 
   protected void setBundleType(String bundleType)
@@ -62,11 +67,11 @@ public class Entity
   @Override
   public String toString()
   {
-    return "Entity [" +
+    return this.getClass().getSimpleName()  + " [" +
+           "id="          + this.id         + ", " +
            "entityType="  + this.entityType + ", " +
     		   "bundleType="  + this.bundleType + ", " +
-           "id="          + this.id         + ", " +
-  		   	 "url="         + this.url        +
+  		   	 "uri="         + this.uri        +
   		   	 "]";
   }
 }

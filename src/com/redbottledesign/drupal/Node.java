@@ -7,43 +7,65 @@ public class Node
 extends Entity
 {
   public static final String ENTITY_TYPE = "node";
-  public static final String ID_FIELD_NAME = "nid";
-  public static final String TYPE_FIELD_NAME = "type";
 
-  @SerializedName("vid")
-  private int revisionId;
+  public static final String DRUPAL_ID_FIELD_NAME = "nid";
+
+  public static final String DRUPAL_REVISION_ID_FIELD_NAME = "vid";
+  public static final String JAVA_REVISION_ID_FIELD_NAME = "revisionId";
+
+  public static final String DRUPAL_PUBLISHED_FIELD_NAME = "status";
+  public static final String JAVA_PUBLISHED_FIELD_NAME = "published";
+
+  public static final String DRUPAL_PROMOTED_FIELD_NAME = "promote";
+  public static final String JAVA_PROMOTED_FIELD_NAME = "promoted";
+
+  public static final String DRUPAL_STICKY_FIELD_NAME = "sticky";
+  public static final String JAVA_STICKY_FIELD_NAME = "sticky";
+
+  public static final String DRUPAL_DATE_CREATED_FIELD_NAME = "created";
+  public static final String JAVA_DATE_CREATED_FIELD_NAME = "dateCreated";
+
+  public static final String DRUPAL_DATE_CHANGED_FIELD_NAME = "changed";
+  public static final String JAVA_DATE_CHANGED_FIELD_NAME = "dateChanged";
+
+  @SerializedName(DRUPAL_REVISION_ID_FIELD_NAME)
+  private Integer revisionId;
 
   private String title;
 
   private String language;
 
-  @SerializedName("status")
+  @SerializedName(DRUPAL_PUBLISHED_FIELD_NAME)
   private boolean published;
 
-  @SerializedName("promote")
+  @SerializedName(DRUPAL_PROMOTED_FIELD_NAME)
   private boolean promoted;
 
+  @SerializedName(DRUPAL_STICKY_FIELD_NAME)
   private boolean sticky;
 
-  @SerializedName("created")
+  @SerializedName(DRUPAL_DATE_CREATED_FIELD_NAME)
   private Date dateCreated;
 
-  @SerializedName("changed")
+  @SerializedName(DRUPAL_DATE_CHANGED_FIELD_NAME)
   private Date dateChanged;
 
-  private User author;
+  private UserReference author;
 
-  public Node()
+  public Node(String bundleType)
   {
     super(ENTITY_TYPE);
+
+    this.setBundleType(bundleType);
+    this.setPublished(true);
   }
 
-  public int getRevisionId()
+  public Integer getRevisionId()
   {
     return this.revisionId;
   }
 
-  public void setRevisionId(int revisionId)
+  public void setRevisionId(Integer revisionId)
   {
     this.revisionId = revisionId;
   }
@@ -118,12 +140,12 @@ extends Entity
     this.dateChanged = dateChanged;
   }
 
-  public User getAuthor()
+  public UserReference getAuthor()
   {
     return this.author;
   }
 
-  public void setAuthor(User author)
+  public void setAuthor(UserReference author)
   {
     this.author = author;
   }
@@ -131,7 +153,7 @@ extends Entity
   @Override
   public String toString()
   {
-    return "Node ["       +
+    return this.getClass().getSimpleName()    + " [" +
            "id="          + this.getId()      + ", " +
            "url="         + this.getUrl()     + ", " +
            "revisionId="  + this.revisionId   + ", " +

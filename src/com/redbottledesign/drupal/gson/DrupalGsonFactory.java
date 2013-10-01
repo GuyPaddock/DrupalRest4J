@@ -26,8 +26,8 @@ public class DrupalGsonFactory
   {
     GsonBuilder gsonBuilder =
         new GsonBuilder()
-              .registerTypeAdapterFactory(new EntityTypeAdapterFactory<Node>(Node.class, Node.ID_FIELD_NAME))
-              .registerTypeAdapterFactory(new EntityTypeAdapterFactory<User>(User.class, User.ID_FIELD_NAME))
+              .registerTypeAdapterFactory(new EntityTypeAdapterFactory<Node>(Node.class, Node.DRUPAL_ID_FIELD_NAME))
+              .registerTypeAdapterFactory(new EntityTypeAdapterFactory<User>(User.class, User.DRUPAL_ID_FIELD_NAME))
               .registerTypeAdapterFactory(new UnixDateAdapterFactory())
               .registerTypeAdapterFactory(new BooleanTypeAdapterFactory());
 
