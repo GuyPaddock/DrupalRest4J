@@ -98,7 +98,7 @@ extends HttpRequestor
 
   protected HttpClientContext setupAuthenticationHttpContext(URI requestUri, CredentialsProvider credentialProvider)
   {
-    HttpHost            targetHost  = new HttpHost(requestUri.getHost(), requestUri.getPort());
+    HttpHost            targetHost  = new HttpHost(requestUri.getHost(), requestUri.getPort(), requestUri.getScheme());
     AuthScope           authScope   = new AuthScope(targetHost);
     AuthCache           authCache   = new BasicAuthCache();
     BasicScheme         basicAuth   = new BasicScheme();

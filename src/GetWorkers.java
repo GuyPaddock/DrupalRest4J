@@ -30,8 +30,9 @@ public class GetWorkers
 //    }
 //
 //    System.out.println(gson.toJson(nodes));
+    // FIXME: Why do we have to specify the port #?
     SessionManager drupalSessionManager =
-      new SessionManager(new URI("http://www.theredpool.com"), DRUPAL_USER_NAME, DRUPAL_PASSWORD);
+      new SessionManager(new URI("https://www.theredpool.com:443"), DRUPAL_USER_NAME, DRUPAL_PASSWORD);
 
 //    System.out.println(drupalSessionManager.getSessionToken());
 //
