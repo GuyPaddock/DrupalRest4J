@@ -1,16 +1,12 @@
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Date;
 
-import com.redbottledesign.bitcoin.pool.drupal.SolvedBlock;
-import com.redbottledesign.bitcoin.pool.drupal.gson.requestor.SolvedBlockRequestor;
-import com.redbottledesign.drupal.User;
+import com.redbottledesign.bitcoin.pool.drupal.WittyRemark;
+import com.redbottledesign.bitcoin.pool.drupal.gson.requestor.WittyRemarkRequestor;
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
-import com.redbottledesign.drupal.gson.requestor.UserRequestor;
 
 public class GetWorkers
 {
@@ -39,10 +35,10 @@ public class GetWorkers
 
 //    System.out.println(drupalSessionManager.getSessionToken());
 //
-//    NodeRequestor requestor = new NodeRequestor(drupalSessionManager);
-//    Node          node      = requestor.requestNodeByNid(11);
+    WittyRemarkRequestor requestor = new WittyRemarkRequestor(drupalSessionManager);
+    WittyRemark          node      = requestor.requestNodeByNid(11);
 //
-//    System.out.println(node);
+    System.out.println(node);
 //    System.out.println(DrupalGsonFactory.getInstance().createGson().toJson(node, Node.class));
 //
 //    List<Node> nodes = requestor.requestNodesByType("faq");
@@ -55,8 +51,8 @@ public class GetWorkers
 
 //    WittyRemark remark = new WittyRemark();
 //
-    UserRequestor userRequestor       = new UserRequestor(drupalSessionManager);
-    User          poolManagementUser  = userRequestor.requestUserByUid(14);
+//    UserRequestor userRequestor       = new UserRequestor(drupalSessionManager);
+//    User          poolManagementUser  = userRequestor.requestUserByUid(14);
 //
 //    System.out.println(poolManagementUser);
 //
@@ -78,17 +74,17 @@ public class GetWorkers
 //
 //    roundRequestor.updateNode(round);
 
-    SolvedBlockRequestor requestor = new SolvedBlockRequestor(drupalSessionManager);
-    SolvedBlock          block     = requestor.requestNodeByNid(27);
+//    SolvedBlockRequestor requestor2 = new SolvedBlockRequestor(drupalSessionManager);
+//    SolvedBlock          block      = requestor2.requestNodeByNid(27);
+//
+//    System.out.println(block);
 
-    System.out.println(block);
-
-    block.setCreationTime(new Date());
-    block.setBlockReward(BigDecimal.valueOf(25));
-    block.setSolvingMember(new User.Reference(1));
-
-    requestor.updateNode(block);
-
-    System.out.println(block);
+//    block.setCreationTime(new Date());
+//    block.setReward(BigDecimal.valueOf(25));
+//    block.setSolvingMember(new User.Reference(1));
+//
+//    requestor2.updateNode(block);
+//
+//    System.out.println(block);
   }
 }
