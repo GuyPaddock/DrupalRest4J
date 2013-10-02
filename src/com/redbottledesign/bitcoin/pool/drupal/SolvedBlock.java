@@ -21,17 +21,20 @@ extends Node
   public static final String DRUPAL_FIELD_CREATION_TIME = "field_block_creation_time";
   public static final String JAVA_FIELD_CREATION_TIME = "creationTime";
 
-  public static final String DRUPAL_FIELD_BLOCK_DIFFICULTY = "field_block_difficulty";
-  public static final String JAVA_FIELD_BLOCK_DIFFICULTY = "difficulty";
+  public static final String DRUPAL_FIELD_DIFFICULTY = "field_block_difficulty";
+  public static final String JAVA_FIELD_DIFFICULTY = "difficulty";
 
-  public static final String DRUPAL_FIELD_BLOCK_REWARD = "field_block_reward";
-  public static final String JAVA_FIELD_BLOCK_REWARD = "blockReward";
+  public static final String DRUPAL_FIELD_REWARD = "field_block_reward";
+  public static final String JAVA_FIELD_REWARD = "reward";
 
   public static final String DRUPAL_FIELD_ROUND = "field_block_round";
   public static final String JAVA_FIELD_ROUND = "round";
 
   public static final String DRUPAL_FIELD_SOLVING_MEMBER = "field_block_solver";
   public static final String JAVA_FIELD_SOLVING_MEMBER = "solvingMember";
+
+  public static final String DRUPAL_FIELD_WITTY_REMARK = "field_block_remark";
+  public static final String JAVA_FIELD_WITTY_REMARK = "wittyRemark";
 
   @SerializedName(DRUPAL_FIELD_HEIGHT)
   private long height;
@@ -42,17 +45,20 @@ extends Node
   @SerializedName(DRUPAL_FIELD_CREATION_TIME)
   private Date creationTime;
 
-  @SerializedName(DRUPAL_FIELD_BLOCK_DIFFICULTY)
+  @SerializedName(DRUPAL_FIELD_DIFFICULTY)
   private long difficulty;
 
-  @SerializedName(DRUPAL_FIELD_BLOCK_REWARD)
-  private BigDecimal blockReward;
+  @SerializedName(DRUPAL_FIELD_REWARD)
+  private BigDecimal reward;
 
   @SerializedName(DRUPAL_FIELD_ROUND)
   private Node.Reference round;
 
   @SerializedName(DRUPAL_FIELD_SOLVING_MEMBER)
   private User.Reference solvingMember;
+
+  @SerializedName(DRUPAL_FIELD_WITTY_REMARK)
+  private Node.Reference wittyRemark;
 
   public SolvedBlock()
   {
@@ -99,14 +105,14 @@ extends Node
     this.difficulty = difficulty;
   }
 
-  public BigDecimal getBlockReward()
+  public BigDecimal getReward()
   {
-    return this.blockReward;
+    return this.reward;
   }
 
-  public void setBlockReward(BigDecimal blockReward)
+  public void setReward(BigDecimal blockReward)
   {
-    this.blockReward = blockReward;
+    this.reward = blockReward;
   }
 
   public Node.Reference getRound()
@@ -129,6 +135,16 @@ extends Node
     this.solvingMember = solvingMember;
   }
 
+  public Node.Reference getWittyRemark()
+  {
+    return this.wittyRemark;
+  }
+
+  public void setWittyRemark(Node.Reference wittyRemark)
+  {
+    this.wittyRemark = wittyRemark;
+  }
+
   @Override
   public String toString()
   {
@@ -140,9 +156,10 @@ extends Node
            "status="        + this.status           + ", " +
            "creationTime="  + this.creationTime     + ", " +
            "difficulty="    + this.difficulty       + ", " +
-           "blockReward="   + this.blockReward      + ", " +
+           "reward="        + this.reward           + ", " +
            "round="         + this.round            + ", " +
            "solvingMember=" + this.solvingMember    + ", " +
+           "wittyRemark="   + this.wittyRemark      + ", " +
            "published="     + this.isPublished()    + ", " +
            "dateCreated="   + this.getDateCreated() + ", " +
            "dateChanged="   + this.getDateChanged() +
