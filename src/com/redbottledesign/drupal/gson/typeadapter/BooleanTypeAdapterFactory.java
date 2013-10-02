@@ -1,6 +1,9 @@
 package com.redbottledesign.drupal.gson.typeadapter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -33,6 +36,18 @@ implements TypeAdapterFactory
   protected static class BooleanTypeAdapter
   extends TypeAdapter<Boolean>
   {
+    private static final List<String> BOOLEAN_FALSE_VALUES =
+      Collections.unmodifiableList(
+        Arrays.asList(
+          "0",
+          "false"));
+
+    private static final List<String> BOOLEAN_TRUE_VALUES =
+      Collections.unmodifiableList(
+        Arrays.asList(
+          "1",
+          "true"));
+
     private static final String BOOLEAN_FALSE = "0";
     private static final String BOOLEAN_TRUE = "1";
 
@@ -67,16 +82,27 @@ implements TypeAdapterFactory
     public Boolean read(JsonReader in)
     throws IOException
     {
-      JsonElement   readValue;
-      JsonPrimitive primitiveValue;
+      Boolean     result = null;
+      JsonElement readValue;
+      String      primitiveValue;
 
       if (in == null)
         throw new IllegalArgumentException("in cannot be null.");
 
-      readValue       = this.elementAdapter.read(in);
-      primitiveValue  = readValue.getAsJsonPrimitive();
+      readValue = this.elementAdapter.read(in);
 
-      return (BOOLEAN_TRUE.equals(primitiveValue.getAsString()) ? Boolean.TRUE : Boolean.FALSE);
+      if (!readValue.isJsonNull())
+      {
+        primitiveValue = readValue.getAsString();
+
+        if (BOOLEAN_FALSE_VALUES.contains(primitiveValue.toLowerCase()))
+          result = Boolean.FALSE;
+
+        else if (BOOLEAN_TRUE_VALUES.contains(primitiveValue.toLowerCase()))
+          result = Boolean.TRUE;
+      }
+
+      return result;
     }
   }
 }
