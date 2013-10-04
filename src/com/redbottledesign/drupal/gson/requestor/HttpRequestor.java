@@ -7,11 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -74,6 +78,13 @@ extends DrupalConsumer
     boolean               wasSuccessful = false;
 
     this.preprocessRequest(request);
+
+    System.out.println("request:-------------------");
+    System.out.println(request.getRequestLine());
+    Header headers[] = request.getAllHeaders();
+    for(Header h:headers){
+      System.out.println(h.getName() + ": " + h.getValue());
+    }
 
     /* NOTE: Not try-with-resources because the caller needs it open, except if
      * an exception is thrown.
@@ -145,15 +156,36 @@ extends DrupalConsumer
 
     for (Entry<String, Object> criterionEntry : criteria.entrySet())
     {
+      String  criterionName   = criterionEntry.getKey(),
+              encodedValue;
+      Object  criterionValue  = criterionEntry.getValue();
+
+      if (criterionName == null)
+        throw new IllegalArgumentException("all criteria must have non-null keys.");
+
+      if (criterionValue == null)
+        throw new IllegalArgumentException("all criteria must have non-null values.");
+
       if (!isFirst)
         queryStringBuilder.append('&');
 
       else
         isFirst = false;
 
-      queryStringBuilder.append(criterionEntry.getKey());
+      try
+      {
+        encodedValue = URLEncoder.encode(criterionValue.toString(), StandardCharsets.UTF_8.name());
+      }
+
+      catch (UnsupportedEncodingException ex)
+      {
+        throw new IllegalArgumentException(
+          "Bad criterion; '" + criterionName + "'='" + criterionValue + "': " + ex.getMessage());
+      }
+
+      queryStringBuilder.append(criterionName);
       queryStringBuilder.append('=');
-      queryStringBuilder.append(criterionEntry.getValue());
+      queryStringBuilder.append(encodedValue);
     }
 
     return this.createEndpointUri(endpoint, queryStringBuilder.toString());

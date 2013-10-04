@@ -23,6 +23,12 @@ extends EntityRequestor
     return this.requestEntityById(userId, User.ENTITY_TYPE, User.class);
   }
 
+  public User requestUserByUsername(String userName)
+  throws IOException, DrupalHttpException
+  {
+    return this.requestEntityByCriterion(User.ENTITY_TYPE, User.DRUPAL_FIELD_NAME, userName);
+  }
+
   public void updateUser(User user)
   throws IOException, DrupalHttpException
   {
@@ -35,6 +41,7 @@ extends EntityRequestor
     this.createEntity(user);
   }
 
+  @Override
   protected Type getListResultType()
   {
     return new TypeToken<JsonEntityResultList<User>>(){}.getType();

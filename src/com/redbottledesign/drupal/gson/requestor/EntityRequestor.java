@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.methods.HttpGet;
@@ -18,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.redbottledesign.drupal.Entity;
 import com.redbottledesign.drupal.gson.DrupalGsonFactory;
+import com.redbottledesign.drupal.gson.JsonEntityResultList;
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 import com.redbottledesign.gson.strategy.BeforeAndAfterExclusionStrategy;
@@ -32,6 +35,8 @@ extends SessionBasedHttpRequestor
     super(sessionManager);
   }
 
+  protected abstract Type getListResultType();
+
   protected <T extends Entity<?>> T requestEntityById(int entityId, String entityType, Class<T> entityClass)
   throws IOException, DrupalHttpException
   {
@@ -44,6 +49,37 @@ extends SessionBasedHttpRequestor
       Gson drupalGson = DrupalGsonFactory.getInstance().createGson();
 
       result = drupalGson.fromJson(responseReader, entityClass);
+    }
+
+    return result;
+  }
+
+  public <T extends Entity<?>> T requestEntityByCriterion(String entityType, String criterionName, Object criterionValue)
+  throws IOException, DrupalHttpException
+  {
+    return this.requestEntityByCriteria(entityType, Collections.singletonMap(criterionName, criterionValue));
+  }
+
+  public <T extends Entity<?>> T requestEntityByCriteria(String entityType, Map<String, Object> criteria)
+  throws IOException, DrupalHttpException
+  {
+    T   result      = null;
+    URI requestUri  = this.createUriForEntityCriteria(entityType, criteria);
+
+    try (InputStream  responseStream = this.executeRequest(new HttpGet(requestUri));
+         Reader       responseReader = new InputStreamReader(responseStream))
+    {
+      Type                    listType    = this.getListResultType();
+      Gson                    drupalGson  = DrupalGsonFactory.getInstance().createGson();
+      JsonEntityResultList<T> jsonResults = drupalGson.fromJson(responseReader, listType);
+
+      if (jsonResults != null)
+      {
+        List<T> results = jsonResults.getResults();
+
+        if (!results.isEmpty())
+          result = results.get(0);
+      }
     }
 
     return result;
@@ -153,23 +189,13 @@ extends SessionBasedHttpRequestor
 
   protected URI createUriForEntityCriterion(String entityType, String criterion, Object value)
   {
-    return this.createUriForEntityCriterion(entityType, null, criterion, value);
+    return this.createUriForEntityCriteria(entityType, Collections.singletonMap(criterion, value));
   }
 
   protected URI createUriForEntityCriteria(String entityType, Map<String, Object> criteria)
   {
-    return this.createUriForEntityCriteria(entityType, null, criteria);
-  }
-
-  protected URI createUriForEntityCriterion(String entityType, Integer entityId, String criterion, Object value)
-  {
-    return this.createUriForEntityCriteria(entityType, entityId, Collections.singletonMap(criterion, value));
-  }
-
-  protected URI createUriForEntityCriteria(String entityType, Integer entityId, Map<String, Object> criteria)
-  {
     return this.createUriForCriteria(
-      this.getRelativeEndpointUriFragment(entityType, entityId, false),
+      this.getRelativeEndpointUriFragment(entityType, null, false),
       criteria);
   }
 
