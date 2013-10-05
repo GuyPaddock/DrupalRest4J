@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -146,15 +147,27 @@ extends DrupalConsumer
 
   protected URI createUriForCriterion(String endpoint, String criterion, Object value)
   {
-    return this.createUriForCriteria(endpoint, Collections.singletonMap(criterion, value));
+    return this.createUriForCriteria(endpoint, Collections.singletonMap(criterion, value), null, null);
   }
 
-  protected URI createUriForCriteria(String endpoint, Map<String, Object> criteria)
+  protected URI createUriForCriteria(String endpoint, Map<String, Object> criteria, String sortName,
+                                     SortOrder sortOrder)
   {
-    StringBuilder queryStringBuilder = new StringBuilder("?");
-    boolean       isFirst            = true;
+    StringBuilder       queryStringBuilder = new StringBuilder("?");
+    boolean             isFirst            = true;
+    Map<String, Object> queryStringParams  = new HashMap<>(criteria);
 
-    for (Entry<String, Object> criterionEntry : criteria.entrySet())
+    if ((sortName == null) && (sortOrder != null))
+      throw new IllegalArgumentException("sortName must be specified if sortOrder is specified.");
+
+    if (sortName != null)
+    {
+      String sortOrderString = (sortOrder != null) ? sortOrder.getJsonValue() : SortOrder.ASCENDING.toString();
+
+      queryStringParams.put("sort", sortOrderString);
+    }
+
+    for (Entry<String, Object> criterionEntry : queryStringParams.entrySet())
     {
       String  criterionName   = criterionEntry.getKey(),
               encodedValue;

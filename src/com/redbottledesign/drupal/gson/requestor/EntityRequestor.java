@@ -63,8 +63,16 @@ extends SessionBasedHttpRequestor
   public <T extends Entity<?>> T requestEntityByCriteria(String entityType, Map<String, Object> criteria)
   throws IOException, DrupalHttpException
   {
+    return this.requestEntityByCriteria(entityType, criteria, null, null);
+  }
+
+
+  public <T extends Entity<?>> T requestEntityByCriteria(String entityType, Map<String, Object> criteria,
+                                                         String sortName, SortOrder sortOrder)
+  throws IOException, DrupalHttpException
+  {
     T   result      = null;
-    URI requestUri  = this.createUriForEntityCriteria(entityType, criteria);
+    URI requestUri  = this.createUriForEntityCriteria(entityType, criteria, sortName, sortOrder);
 
     try (InputStream  responseStream = this.executeRequest(new HttpGet(requestUri));
          Reader       responseReader = new InputStreamReader(responseStream))
@@ -189,14 +197,17 @@ extends SessionBasedHttpRequestor
 
   protected URI createUriForEntityCriterion(String entityType, String criterion, Object value)
   {
-    return this.createUriForEntityCriteria(entityType, Collections.singletonMap(criterion, value));
+    return this.createUriForEntityCriteria(entityType, Collections.singletonMap(criterion, value), null, null);
   }
 
-  protected URI createUriForEntityCriteria(String entityType, Map<String, Object> criteria)
+  protected URI createUriForEntityCriteria(String entityType, Map<String, Object> criteria,
+                                           String sortName, SortOrder sortOrder)
   {
     return this.createUriForCriteria(
       this.getRelativeEndpointUriFragment(entityType, null, false),
-      criteria);
+      criteria,
+      sortName,
+      sortOrder);
   }
 
   protected URI createUriForEntity(String entityType, boolean forSave)
