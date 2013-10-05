@@ -8,8 +8,25 @@ public class User
 extends Entity<User>
 {
   public static final String ENTITY_TYPE = "user";
+
   public static final String DRUPAL_ID_FIELD_NAME = "uid";
 
+  public static final String DRUPAL_FIELD_NAME = "name";
+  public static final String JAVA_FIELD_NAME = "name";
+
+  public static final String DRUPAL_FIELD_EMAIL_ADDRESS = "mail";
+  public static final String JAVA_FIELD_EMAIL_ADDRESS = "emailAddress";
+
+  public static final String DRUPAL_FIELD_DATE_CREATED = "created";
+  public static final String JAVA_FIELD_DATE_CREATED = "dateCreated";
+
+  public static final String DRUPAL_FIELD_DATE_LAST_LOGIN = "last_login";
+  public static final String JAVA_FIELD_DATE_LAST_LOGIN = "dateLastLogin";
+
+  public static final String DRUPAL_FIELD_USER_IS_ACTIVE = "status";
+  public static final String JAVA_FIELD_USER_IS_ACTIVE = "isActive";
+
+  @SerializedName("name")
   private String name;
 
   @SerializedName("mail")
