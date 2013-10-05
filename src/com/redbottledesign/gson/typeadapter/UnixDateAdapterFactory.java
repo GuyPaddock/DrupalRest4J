@@ -67,14 +67,18 @@ implements TypeAdapterFactory
     {
       JsonElement readTime;
       Long        unixTime;
-      Date        dateTime;
+      Date        dateTime = null;
 
       if (in == null)
         throw new IllegalArgumentException("in cannot be null.");
 
       readTime = this.elementAdapter.read(in);
-      unixTime = readTime.getAsJsonPrimitive().getAsLong();
-      dateTime = new Date(TimeUnit.MILLISECONDS.convert(unixTime, TimeUnit.SECONDS));
+
+      if (readTime.isJsonPrimitive())
+      {
+        unixTime = readTime.getAsJsonPrimitive().getAsLong();
+        dateTime = new Date(TimeUnit.MILLISECONDS.convert(unixTime, TimeUnit.SECONDS));
+      }
 
       return dateTime;
     }
