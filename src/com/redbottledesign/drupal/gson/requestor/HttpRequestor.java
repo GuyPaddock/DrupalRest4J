@@ -36,6 +36,8 @@ extends DrupalConsumer
   private static final String MIME_TYPE_JSON = "application/json";
   private static final String HTTP_HEADER_ACCEPT = "Accept";
   private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
+  private static final String JSON_PARAM_SORT_DIRECTION = "direction";
+  private static final String JSON_PARAM_SORT_NAME = "sort";
 
   public HttpRequestor(URI drupalSiteUri)
   {
@@ -164,7 +166,8 @@ extends DrupalConsumer
     {
       String sortOrderString = (sortOrder != null) ? sortOrder.getJsonValue() : SortOrder.ASCENDING.toString();
 
-      queryStringParams.put("sort", sortOrderString);
+      queryStringParams.put(JSON_PARAM_SORT_NAME, sortName);
+      queryStringParams.put(JSON_PARAM_SORT_DIRECTION, sortOrderString);
     }
 
     for (Entry<String, Object> criterionEntry : queryStringParams.entrySet())
