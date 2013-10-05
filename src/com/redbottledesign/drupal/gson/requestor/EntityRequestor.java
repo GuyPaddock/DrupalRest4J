@@ -66,13 +66,25 @@ extends SessionBasedHttpRequestor
     return this.requestEntityByCriteria(entityType, criteria, null, null);
   }
 
-
   public <T extends Entity<?>> T requestEntityByCriteria(String entityType, Map<String, Object> criteria,
                                                          String sortName, SortOrder sortOrder)
   throws IOException, DrupalHttpException
   {
-    T   result      = null;
-    URI requestUri  = this.createUriForEntityCriteria(entityType, criteria, sortName, sortOrder);
+    T       result  = null;
+    List<T> results = this.requestEntitiesByCriteria(entityType, criteria, sortName, sortOrder);
+
+    if (!results.isEmpty())
+      result = results.get(0);
+
+    return result;
+  }
+
+  public <T extends Entity<?>> List<T> requestEntitiesByCriteria(String entityType, Map<String, Object> criteria,
+                                                                 String sortName, SortOrder sortOrder)
+  throws IOException, DrupalHttpException
+  {
+    List<T> results     = Collections.emptyList();
+    URI     requestUri  = this.createUriForEntityCriteria(entityType, criteria, sortName, sortOrder);
 
     try (InputStream  responseStream = this.executeRequest(new HttpGet(requestUri));
          Reader       responseReader = new InputStreamReader(responseStream))
@@ -82,15 +94,10 @@ extends SessionBasedHttpRequestor
       JsonEntityResultList<T> jsonResults = drupalGson.fromJson(responseReader, listType);
 
       if (jsonResults != null)
-      {
-        List<T> results = jsonResults.getResults();
-
-        if (!results.isEmpty())
-          result = results.get(0);
-      }
+        results = jsonResults.getResults();
     }
 
-    return result;
+    return results;
   }
 
   protected String computeDifferenceOnlyJson(final Entity<?> updatedEntity)
