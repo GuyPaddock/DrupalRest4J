@@ -175,15 +175,6 @@ public abstract class Entity<T extends Entity<?>>
       else if (!id.equals(other.id))
         return false;
 
-      if (uri == null)
-      {
-        if (other.uri != null)
-          return false;
-      }
-
-      else if (!uri.equals(other.uri))
-        return false;
-
       return true;
     }
 
