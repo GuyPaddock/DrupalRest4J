@@ -20,8 +20,8 @@ import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 import com.redbottledesign.drupal.gson.strategy.NewNodeExclusionStrategy;
 
-public class NodeRequestor<T extends Node>
-extends EntityRequestor
+public class NodeRequestor<N extends Node>
+extends EntityRequestor<N>
 {
   public NodeRequestor(SessionManager sessionManager)
   {
@@ -32,16 +32,16 @@ extends EntityRequestor
     };
   }
 
-  public T requestNodeByNid(int nodeId)
+  public N requestNodeByNid(int nodeId)
   throws IOException, DrupalHttpException
   {
     return this.requestEntityById(nodeId, Node.ENTITY_TYPE, this.getNodeType());
   }
 
-  public List<T> requestNodesByType(String nodeType)
+  public List<N> requestNodesByType(String nodeType)
   throws IOException, DrupalHttpException
   {
-    List<T> results     = null;
+    List<N> results     = null;
     URI     requestUri  = this.createUriForEntityCriterion(Node.ENTITY_TYPE, Entity.DRUPAL_BUNDLE_TYPE_FIELD_NAME, nodeType);
 
     try (InputStream  responseStream = this.executeRequest(new HttpGet(requestUri));
@@ -49,7 +49,7 @@ extends EntityRequestor
     {
       Type                    listType    = this.getListResultType();
       Gson                    drupalGson  = DrupalGsonFactory.getInstance().createGson();
-      JsonEntityResultList<T> jsonResults = drupalGson.fromJson(responseReader, listType);
+      JsonEntityResultList<N> jsonResults = drupalGson.fromJson(responseReader, listType);
 
       if (jsonResults != null)
         results = jsonResults.getResults();
@@ -58,26 +58,22 @@ extends EntityRequestor
     return results;
   }
 
-  public void updateNode(T node)
+  @Override
+  public void saveNew(N node)
   throws IOException, DrupalHttpException
   {
-    this.updateEntity(node);
+    this.saveNew(node, new NewNodeExclusionStrategy());
   }
 
-  public void createNode(T node)
-  throws IOException, DrupalHttpException
-  {
-    this.createEntity(node, new NewNodeExclusionStrategy());
-  }
-
+  @Override
   protected Type getListResultType()
   {
     return new TypeToken<JsonEntityResultList<Node>>(){}.getType();
   }
 
   @SuppressWarnings("unchecked")
-  protected Class<T> getNodeType()
+  protected Class<N> getNodeType()
   {
-    return (Class<T>)Node.class;
+    return (Class<N>)Node.class;
   }
 }

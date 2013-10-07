@@ -10,7 +10,7 @@ import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 
 public class UserRequestor
-extends EntityRequestor
+extends EntityRequestor<User>
 {
   public UserRequestor(SessionManager sessionManager)
   {
@@ -27,18 +27,6 @@ extends EntityRequestor
   throws IOException, DrupalHttpException
   {
     return this.requestEntityByCriterion(User.ENTITY_TYPE, User.DRUPAL_FIELD_NAME, userName);
-  }
-
-  public void updateUser(User user)
-  throws IOException, DrupalHttpException
-  {
-    this.updateEntity(user);
-  }
-
-  public void createUser(User user)
-  throws IOException, DrupalHttpException
-  {
-    this.createEntity(user);
   }
 
   @Override
