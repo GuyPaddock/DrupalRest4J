@@ -152,6 +152,11 @@ extends DrupalConsumer
     return this.createUriForCriteria(endpoint, Collections.singletonMap(criterion, value), null, null);
   }
 
+  protected URI createUriForCriteria(String endpoint, Map<String, Object> criteria)
+  {
+    return this.createUriForCriteria(endpoint, criteria, null, null);
+  }
+
   protected URI createUriForCriteria(String endpoint, Map<String, Object> criteria, String sortName,
                                      SortOrder sortOrder)
   {
