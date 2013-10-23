@@ -14,6 +14,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
@@ -28,6 +30,8 @@ import com.redbottledesign.gson.strategy.BeforeAndAfterExclusionStrategy;
 public abstract class EntityRequestor<E extends Entity<?>>
 extends SessionBasedHttpRequestor
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger(EntityRequestor.class);
+
   private static final String JSON_URI_SUFFIX = ".json";
 
   public EntityRequestor(SessionManager sessionManager)
@@ -158,7 +162,8 @@ extends SessionBasedHttpRequestor
     drupalGson  = drupalGsonBuilder.create();
     entityJson  = drupalGson.toJson(entity);
 
-    System.out.println(entityJson);
+    if (LOGGER.isDebugEnabled())
+        LOGGER.debug("saveNew() - entity as JSON: " + entityJson);
 
     request.setEntity(new StringEntity(entityJson));
 

@@ -24,6 +24,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.redbottledesign.drupal.gson.DrupalConsumer;
 import com.redbottledesign.drupal.gson.exception.DrupalAuthenticationRequiredException;
@@ -33,6 +35,8 @@ import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 public abstract class HttpRequestor
 extends DrupalConsumer
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequestor.class);
+
   private static final String MIME_TYPE_JSON = "application/json";
   private static final String HTTP_HEADER_ACCEPT = "Accept";
   private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
@@ -82,11 +86,16 @@ extends DrupalConsumer
 
     this.preprocessRequest(request);
 
-    System.out.println("request:-------------------");
-    System.out.println(request.getRequestLine());
-    Header headers[] = request.getAllHeaders();
-    for(Header h:headers){
-      System.out.println(h.getName() + ": " + h.getValue());
+    if (LOGGER.isDebugEnabled())
+    {
+      Header headers[] = request.getAllHeaders();
+
+      LOGGER.debug("executeRequest() - request: -------------------");
+      LOGGER.debug(request.getRequestLine().toString());
+
+      for (Header header : headers){
+        LOGGER.debug(header.getName() + ": " + header.getValue());
+      }
     }
 
     /* NOTE: Not try-with-resources because the caller needs it open, except if
