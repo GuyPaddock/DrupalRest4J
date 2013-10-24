@@ -111,13 +111,16 @@ extends DrupalConsumer
       // 2XX is success
       if (!String.valueOf(statusCode).matches("2[0-9]{2}"))
       {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent())))
+        if (LOGGER.isDebugEnabled())
         {
-          String line;
-
-          while ((line = reader.readLine()) != null)
+          try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent())))
           {
-            System.out.println(" >> " + line);
+            String line;
+
+            while ((line = reader.readLine()) != null)
+            {
+              LOGGER.debug(" >> " + line);
+            }
           }
         }
 
