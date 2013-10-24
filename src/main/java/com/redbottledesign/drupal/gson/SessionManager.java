@@ -34,6 +34,12 @@ extends DrupalConsumer
     return this.sessionToken;
   }
 
+  public void refreshSessionToken()
+  throws DrupalHttpException, IOException
+  {
+    this.setSessionToken(this.sessionRequestor.requestSessionToken());
+  }
+
   public void addSessionToRequest(HttpRequest request)
   throws DrupalHttpException, IOException
   {
@@ -56,11 +62,5 @@ extends DrupalConsumer
   protected void setSessionRequestor(SessionRequestor sessionRequestor)
   {
     this.sessionRequestor = sessionRequestor;
-  }
-
-  protected void refreshSessionToken()
-  throws DrupalHttpException, IOException
-  {
-    this.setSessionToken(this.sessionRequestor.requestSessionToken());
   }
 }
