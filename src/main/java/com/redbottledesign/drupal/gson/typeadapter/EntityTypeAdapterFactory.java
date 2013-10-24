@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.redbottledesign.drupal.Entity;
 import com.redbottledesign.gson.typeadapter.CustomizingTypeAdapterFactory;
 
-public class EntityTypeAdapterFactory<E extends Entity>
+public class EntityTypeAdapterFactory<E extends Entity<?>>
 extends CustomizingTypeAdapterFactory<E>
 {
   private String idFieldName;
@@ -28,7 +28,7 @@ extends CustomizingTypeAdapterFactory<E>
   }
 
   @Override
-  protected JsonElement beforeWrite(Entity sourceElement, JsonElement targetElement)
+  protected JsonElement beforeWrite(E sourceElement, JsonElement targetElement)
   {
     if (targetElement.isJsonObject())
     {
