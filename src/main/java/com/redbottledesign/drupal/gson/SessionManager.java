@@ -25,7 +25,7 @@ extends DrupalConsumer
     this.setSessionRequestor(new SessionRequestor(drupalSiteUri, userName, password));
   }
 
-  public SessionToken getSessionToken()
+  public synchronized SessionToken getSessionToken()
   throws DrupalHttpException, IOException
   {
     if (this.sessionToken == null)
@@ -34,7 +34,7 @@ extends DrupalConsumer
     return this.sessionToken;
   }
 
-  public void refreshSessionToken()
+  public synchronized void refreshSessionToken()
   throws DrupalHttpException, IOException
   {
     this.setSessionToken(this.sessionRequestor.requestSessionToken());
@@ -49,17 +49,17 @@ extends DrupalConsumer
     request.addHeader(HTTP_REQUEST_HEADER_CSRF_TOKEN,     sessionToken.getCsrfToken());
   }
 
-  protected void setSessionToken(SessionToken sessionToken)
+  protected synchronized void setSessionToken(SessionToken sessionToken)
   {
     this.sessionToken = sessionToken;
   }
 
-  protected DrupalConsumer getSessionRequestor()
+  protected synchronized DrupalConsumer getSessionRequestor()
   {
     return this.sessionRequestor;
   }
 
-  protected void setSessionRequestor(SessionRequestor sessionRequestor)
+  protected synchronized void setSessionRequestor(SessionRequestor sessionRequestor)
   {
     this.sessionRequestor = sessionRequestor;
   }

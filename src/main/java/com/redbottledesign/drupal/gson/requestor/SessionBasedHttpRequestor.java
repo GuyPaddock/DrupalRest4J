@@ -2,6 +2,7 @@ package com.redbottledesign.drupal.gson.requestor;
 
 import java.io.IOException;
 
+import org.apache.http.HeaderIterator;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -34,9 +35,18 @@ extends HttpRequestor
         this.sessionManager = sessionManager;
     }
 
+    protected static void removeAllHeaders(HttpUriRequest request)
+    {
+        for (HeaderIterator iterator = request.headerIterator(); iterator.hasNext(); iterator.next())
+        {
+            // Remove the header
+            iterator.remove();
+        }
+    }
+
     @Override
     protected void preprocessRequest(HttpRequest request)
-                    throws DrupalHttpException, IOException
+    throws DrupalHttpException, IOException
     {
         super.preprocessRequest(request);
 
@@ -69,6 +79,9 @@ extends HttpRequestor
 
                     // Refresh session token and try again.
                     this.sessionManager.refreshSessionToken();
+
+                    // Clear out stale session headers
+                    removeAllHeaders(request);
                 }
 
                 else
