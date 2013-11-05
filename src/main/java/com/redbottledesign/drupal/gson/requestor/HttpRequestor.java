@@ -1,11 +1,9 @@
 package com.redbottledesign.drupal.gson.requestor;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -16,15 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.redbottledesign.drupal.gson.DrupalConsumer;
 import com.redbottledesign.drupal.gson.exception.DrupalAuthenticationRequiredException;
@@ -34,9 +29,6 @@ import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 public abstract class HttpRequestor
 extends DrupalConsumer
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequestor.class);
-
-
     private static final String MIME_TYPE_JSON            = "application/json";
     private static final String HTTP_HEADER_ACCEPT        = "Accept";
     private static final String HTTP_HEADER_CONTENT_TYPE  = "Content-Type";
@@ -85,19 +77,6 @@ extends DrupalConsumer
 
         this.preprocessRequest(request);
 
-        if (LOGGER.isDebugEnabled())
-        {
-            Header headers[] = request.getAllHeaders();
-
-            LOGGER.debug("executeRequest() - request: -------------------");
-            LOGGER.debug(request.getRequestLine().toString());
-
-            for (Header header : headers)
-            {
-                LOGGER.debug(header.getName() + ": " + header.getValue());
-            }
-        }
-
         /*
          * NOTE: Not try-with-resources because the caller needs it open, except
          * if an exception is thrown.
@@ -112,20 +91,6 @@ extends DrupalConsumer
             // 2XX is success
             if (!String.valueOf(statusCode).matches("2[0-9]{2}"))
             {
-                if (LOGGER.isDebugEnabled())
-                {
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity()
-                                    .getContent())))
-                    {
-                        String line;
-
-                        while ((line = reader.readLine()) != null)
-                        {
-                            LOGGER.debug(" >> " + line);
-                        }
-                    }
-                }
-
                 switch (statusCode)
                 {
                 /* 403 Authorization Required */
