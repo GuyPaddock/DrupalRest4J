@@ -24,6 +24,7 @@ import com.redbottledesign.drupal.Entity;
 import com.redbottledesign.drupal.gson.DrupalGsonFactory;
 import com.redbottledesign.drupal.gson.JsonEntityResultList;
 import com.redbottledesign.drupal.gson.SessionManager;
+import com.redbottledesign.drupal.gson.exception.DrupalEndpointMissingException;
 import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 import com.redbottledesign.gson.strategy.BeforeAndAfterExclusionStrategy;
 
@@ -91,6 +92,20 @@ extends SessionBasedHttpRequestor
 
             if (jsonResults != null)
                 results = jsonResults.getResults();
+        }
+
+        catch (DrupalEndpointMissingException ex)
+        {
+            // Suppress -- this is expected if no matching entity is found.
+            if (LOGGER.isTraceEnabled())
+            {
+                LOGGER.trace(
+                    String.format(
+                        "requestEntitiesByCriteria(): Got expected exception for no entity matching criteria (%s): %s",
+                        criteria,
+                        ex.getMessage()),
+                    ex);
+            }
         }
 
         return results;
