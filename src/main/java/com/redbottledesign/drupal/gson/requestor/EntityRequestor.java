@@ -231,6 +231,14 @@ extends SessionBasedHttpRequestor
                 ex);
         }
 
+        if (existingEntity == null)
+        {
+            throw new RuntimeException(
+                String.format(
+                    "Unexpectedly did not retrieve existing entity for comparison: %s",
+                    updatedEntity));
+        }
+
         return this.computeDifferenceOnlyJson(existingEntity, updatedEntity);
     }
 
