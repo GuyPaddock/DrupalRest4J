@@ -70,7 +70,7 @@ extends EntityRequestor<N>
         final int   existingRevision    = existingEntity.getRevisionId();
         final int   updatedRevision     = updatedEntity.getRevisionId();
 
-        if (existingDate.compareTo(updatedDate) > 0)
+        if (existingDate.after(updatedDate))
         {
             throw new IllegalArgumentException(
                 String.format(
