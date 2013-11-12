@@ -65,10 +65,16 @@ extends EntityRequestor<N>
     @Override
     protected String computeDifferenceOnlyJson(N existingEntity, N updatedEntity)
     {
-        final Date  existingDate        = existingEntity.getDateChanged();
-        final Date  updatedDate         = updatedEntity.getDateChanged();
-        final int   existingRevision    = existingEntity.getRevisionId();
-        final int   updatedRevision     = updatedEntity.getRevisionId();
+        Date      existingDate      = existingEntity.getDateChanged();
+        Date      updatedDate       = updatedEntity.getDateChanged();
+        Integer   existingRevision  = existingEntity.getRevisionId();
+        Integer   updatedRevision   = updatedEntity.getRevisionId();
+
+        if (updatedRevision == null)
+            updatedRevision = 0;
+
+        if (updatedDate == null)
+            updatedDate = new Date();
 
         if (existingDate.after(updatedDate))
         {
