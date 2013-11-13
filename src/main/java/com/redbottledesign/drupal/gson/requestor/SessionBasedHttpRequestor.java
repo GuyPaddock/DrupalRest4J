@@ -8,6 +8,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.redbottledesign.drupal.gson.SessionManager;
 import com.redbottledesign.drupal.gson.exception.DrupalAuthenticationRequiredException;
@@ -16,6 +18,8 @@ import com.redbottledesign.drupal.gson.exception.DrupalHttpException;
 public abstract class SessionBasedHttpRequestor
 extends HttpRequestor
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SessionBasedHttpRequestor.class);
+
     private SessionManager sessionManager;
 
     public SessionBasedHttpRequestor(SessionManager sessionManager)
@@ -37,8 +41,15 @@ extends HttpRequestor
 
     protected static void removeAllHeaders(HttpUriRequest request)
     {
-        for (HeaderIterator iterator = request.headerIterator(); iterator.hasNext(); iterator.next())
+        HeaderIterator iterator = request.headerIterator();
+
+        if (LOGGER.isTraceEnabled())
+            LOGGER.trace("removeAllHeaders()");
+
+        while (iterator.hasNext())
         {
+            iterator.next();
+
             // Remove the header
             iterator.remove();
         }
@@ -48,6 +59,9 @@ extends HttpRequestor
     protected void preprocessRequest(HttpRequest request)
     throws DrupalHttpException, IOException
     {
+        if (LOGGER.isTraceEnabled())
+            LOGGER.trace("preprocessRequest()");
+
         super.preprocessRequest(request);
 
         // Add the session token to the request before it is sent.
@@ -74,6 +88,13 @@ extends HttpRequestor
             {
                 if (!hasRetried)
                 {
+                    if (LOGGER.isDebugEnabled())
+                    {
+                        LOGGER.debug(
+                            "Server requested authentication before handling request. Attempting request again after " +
+                            "refreshing session token.");
+                    }
+
                     shouldRetry = true;
                     hasRetried  = true;
 
